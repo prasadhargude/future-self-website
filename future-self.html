@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Design Your Future Self</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & ROOT ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080f;
+  --glass:rgba(255,255,255,0.042);
+  --border:rgba(255,255,255,0.09);
+  --cyan:#00f0ff;
+  --cyan2:#00c8d4;
+  --purple:#a259ff;
+  --gold:#ffc84a;
+  --green:#3dffa0;
+  --pink:#ff5f8f;
+  --txt:#dce8ff;
+  --dim:#5a6a8a;
+  --r:14px;
+  --font-d:"Orbitron",sans-serif;
+  --font-b:"Rajdhani",sans-serif;
+  --font-m:"Space Mono",monospace;
+  --gcyan:0 0 18px rgba(0,240,255,.5),0 0 50px rgba(0,240,255,.15);
+  --gpurple:0 0 18px rgba(162,89,255,.5),0 0 50px rgba(162,89,255,.15);
+  --ggold:0 0 18px rgba(255,200,74,.4),0 0 45px rgba(255,200,74,.12);
+  --tr:.32s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-b);
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background 1.5s ease;
+  cursor:default;
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#050810}
+::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px}
+
+/* ===== CANVAS ===== */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
+
+/* ===== SOUND BTN ===== */
+#sndBtn{
+  position:fixed;top:18px;right:18px;z-index:999;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--glass);border:1px solid var(--border);
+  color:var(--cyan);font-size:1.05rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(12px);transition:var(--tr);
+}
+#sndBtn:hover{background:rgba(0,240,255,.1);box-shadow:var(--gcyan);transform:scale(1.1)}
+#sndBtn.on{border-color:rgba(0,240,255,.5);box-shadow:var(--gcyan)}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;z-index:1;
+  text-align:center;padding:90px 20px 56px;
+  overflow:hidden;
+}
+.hero-orb{
+  position:absolute;border-radius:50%;pointer-events:none;
+  top:-180px;left:50%;transform:translateX(-50%);
+  width:700px;height:700px;
+  background:radial-gradient(circle,rgba(0,240,255,.06) 0%,transparent 68%);
+  animation:pulse 7s ease-in-out infinite;
+}
+.hero-orb.b{
+  width:420px;height:420px;
+  background:radial-gradient(circle,rgba(162,89,255,.08) 0%,transparent 68%);
+  animation-delay:3.5s;
+}
+.tag{
+  display:inline-block;
+  font-family:var(--font-m);font-size:.65rem;letter-spacing:.35em;
+  color:var(--cyan);border:1px solid rgba(0,240,255,.3);
+  padding:5px 14px;border-radius:100px;margin-bottom:22px;
+  animation:fadeDown .8s ease both;
+}
+.h1{
+  font-family:var(--font-d);font-weight:900;line-height:1.08;
+  margin-bottom:18px;animation:fadeDown .9s .1s ease both;
+}
+.h1 .s1{
+  display:block;font-size:clamp(1.6rem,4vw,2.8rem);
+  font-weight:400;color:var(--dim);letter-spacing:.06em;
+}
+.h1 .s2{
+  display:block;font-size:clamp(2.6rem,8vw,5.8rem);
+  background:linear-gradient(130deg,var(--cyan) 0%,var(--purple) 55%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 38px rgba(0,240,255,.28));
+}
+.subtitle{
+  font-size:clamp(.9rem,2.4vw,1.08rem);color:var(--dim);
+  max-width:520px;margin:0 auto;line-height:1.75;letter-spacing:.03em;
+  animation:fadeDown 1s .2s ease both;
+}
+
+/* ===== APP WRAP ===== */
+.wrap{
+  position:relative;z-index:1;
+  max-width:940px;margin:0 auto;padding:0 18px 90px;
+}
+
+/* ===== GLASS CARD ===== */
+.card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:28px;
+  box-shadow:0 8px 32px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+/* ===== BADGE ===== */
+.badge{
+  display:inline-block;
+  font-family:var(--font-m);font-size:.6rem;letter-spacing:.22em;
+  color:var(--cyan);border:1px solid rgba(0,240,255,.28);
+  padding:4px 12px;border-radius:100px;margin-bottom:18px;
+  background:rgba(0,240,255,.04);
+}
+
+/* ===== SLIDERS PANEL ===== */
+.sliders-panel{margin-bottom:28px}
+.panel-title{
+  font-family:var(--font-d);font-size:1rem;font-weight:700;
+  letter-spacing:.1em;color:var(--cyan);margin-bottom:6px;
+}
+.panel-sub{font-size:.88rem;color:var(--dim);margin-bottom:30px;letter-spacing:.02em}
+.sliders-grid{display:flex;flex-direction:column;gap:22px}
+
+.si{
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:12px;background:rgba(255,255,255,.018);
+  padding:18px 20px;transition:border-color .3s,box-shadow .3s;
+}
+.si:hover{border-color:rgba(0,240,255,.18);box-shadow:0 0 18px rgba(0,240,255,.05)}
+.si.glow{
+  border-color:rgba(0,240,255,.32);
+  box-shadow:0 0 20px rgba(0,240,255,.08);
+}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.si-icon{font-size:1.25rem}
+.si-name{
+  flex:1;font-family:var(--font-d);font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.si-val{
+  font-family:var(--font-m);font-size:1.15rem;font-weight:bold;
+  min-width:38px;text-align:right;color:var(--cyan);
+  transition:color .25s;
+}
+
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:5px;border-radius:100px;
+  background:rgba(255,255,255,.08);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--bg);border:2.5px solid var(--cyan);
+  box-shadow:0 0 10px rgba(0,240,255,.7);
+  transition:box-shadow .2s,transform .2s;cursor:grab;
+}
+input[type=range]:active::-webkit-slider-thumb{
+  cursor:grabbing;transform:scale(1.25);
+  box-shadow:0 0 22px rgba(0,240,255,1);
+}
+input[type=range]::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--bg);border:2.5px solid var(--cyan);
+  box-shadow:0 0 10px rgba(0,240,255,.7);cursor:grab;
+}
+
+.si-labels{
+  display:flex;justify-content:space-between;
+  font-size:.65rem;color:var(--dim);
+  font-family:var(--font-m);padding-top:5px;
+}
+
+/* ===== GENERATE BTN ===== */
+.btn-wrap{display:flex;justify-content:center;margin-top:36px}
+.gen-btn{
+  position:relative;padding:15px 52px;
+  font-family:var(--font-d);font-size:.88rem;
+  font-weight:700;letter-spacing:.14em;
+  color:#050810;
+  background:linear-gradient(130deg,var(--cyan),var(--purple));
+  border:none;border-radius:100px;cursor:pointer;
+  overflow:hidden;
+  box-shadow:0 0 28px rgba(0,240,255,.3),0 4px 18px rgba(0,0,0,.4);
+  transition:transform .2s,box-shadow .25s;
+}
+.gen-btn:hover{
+  transform:translateY(-2px) scale(1.04);
+  box-shadow:0 0 55px rgba(0,240,255,.55),0 8px 28px rgba(0,0,0,.4);
+}
+.gen-btn:active{transform:scale(.97)}
+.gen-btn .shine{
+  position:absolute;inset:-50%;
+  background:conic-gradient(transparent 0deg,rgba(255,255,255,.2) 60deg,transparent 120deg);
+  animation:spin 3.5s linear infinite;pointer-events:none;
+}
+
+/* ===== RESULTS ===== */
+#results{display:none;animation:fadeUp .7s ease both}
+
+/* top grid */
+.top-grid{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:18px;margin-bottom:18px;
+}
+@media(max-width:680px){.top-grid{grid-template-columns:1fr}}
+
+/* avatar card */
+.av-card{display:flex;flex-direction:column;align-items:center;text-align:center}
+.av-emoji{
+  font-size:4.8rem;line-height:1;margin:8px 0;
+  filter:drop-shadow(0 0 22px rgba(0,240,255,.5));
+  animation:float 4s ease-in-out infinite;
+}
+.av-name{
+  font-family:var(--font-d);font-size:.92rem;font-weight:700;
+  letter-spacing:.08em;margin-bottom:4px;
+}
+.av-arch{
+  font-size:.72rem;color:var(--purple);
+  font-family:var(--font-m);margin-bottom:14px;letter-spacing:.06em;
+}
+.av-personality{
+  font-size:.75rem;color:var(--gold);
+  font-family:var(--font-b);font-weight:600;
+  background:rgba(255,200,74,.08);border:1px solid rgba(255,200,74,.2);
+  padding:5px 12px;border-radius:100px;margin-bottom:16px;letter-spacing:.04em;
+}
+.power-box{
+  width:100%;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:12px;margin-top:auto;
+}
+.pw-label{
+  font-family:var(--font-m);font-size:.58rem;letter-spacing:.22em;
+  color:var(--dim);display:block;margin-bottom:4px;
+}
+.pw-val{
+  font-family:var(--font-d);font-size:1.9rem;font-weight:900;
+  background:linear-gradient(90deg,var(--gold),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.pw-bar-bg{
+  height:5px;background:rgba(255,255,255,.07);
+  border-radius:100px;margin-top:8px;overflow:hidden;
+}
+.pw-bar{
+  height:100%;border-radius:100px;width:0%;
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--gold));
+  transition:width 1.4s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px rgba(0,240,255,.5);
+}
+
+/* story card */
+.story-card{display:flex;flex-direction:column}
+.story-body{
+  font-size:.93rem;line-height:1.9;color:var(--txt);
+  letter-spacing:.01em;flex:1;
+}
+.story-body .hl{color:var(--cyan);font-weight:600}
+
+/* ===== MIDDLE ROW: Radar + Stats ===== */
+.mid-grid{
+  display:grid;grid-template-columns:1fr 1.4fr;
+  gap:18px;margin-bottom:18px;
+}
+@media(max-width:680px){.mid-grid{grid-template-columns:1fr}}
+
+/* radar */
+.radar-wrap{display:flex;flex-direction:column;align-items:center}
+#radarCanvas{
+  width:100%;max-width:220px;height:220px;
+  filter:drop-shadow(0 0 14px rgba(0,240,255,.25));
+}
+.radar-labels{
+  display:flex;flex-wrap:wrap;gap:8px;
+  justify-content:center;margin-top:14px;
+}
+.rl{
+  font-family:var(--font-m);font-size:.6rem;
+  letter-spacing:.1em;padding:3px 10px;border-radius:100px;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+/* stats */
+.stats-list{display:flex;flex-direction:column;gap:14px}
+.stat-row{}
+.stat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.stat-lbl{font-family:var(--font-m);font-size:.65rem;letter-spacing:.1em;color:var(--dim)}
+.stat-num{font-family:var(--font-m);font-size:.75rem;color:var(--txt)}
+.bar-bg{height:6px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden}
+.bar-fg{height:100%;border-radius:100px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
+
+/* ===== SONGS SECTION ===== */
+.songs-section{margin-bottom:18px}
+.songs-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.vibe-pill{
+  font-size:.72rem;font-family:var(--font-m);letter-spacing:.1em;
+  padding:4px 14px;border-radius:100px;font-weight:400;
+  border:1px solid;
+}
+.songs-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
+}
+@media(max-width:560px){.songs-grid{grid-template-columns:1fr}}
+
+.song-card{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;background:rgba(255,255,255,.025);
+  padding:16px;
+  display:flex;gap:14px;align-items:flex-start;
+  transition:var(--tr);cursor:pointer;
+  text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;
+}
+.song-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--accent,rgba(0,240,255,.05)) 0%,transparent 60%);
+  transition:opacity .3s;
+}
+.song-card:hover{
+  border-color:rgba(255,255,255,.18);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.song-card:hover .sc-play{opacity:1;transform:scale(1)}
+.sc-art{
+  width:48px;height:48px;border-radius:8px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;position:relative;z-index:1;
+}
+.sc-info{flex:1;position:relative;z-index:1;min-width:0}
+.sc-title{
+  font-weight:700;font-size:.88rem;
+  letter-spacing:.02em;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sc-artist{font-size:.78rem;color:var(--dim);margin-bottom:6px}
+.sc-genre{
+  display:inline-block;font-family:var(--font-m);font-size:.55rem;
+  letter-spacing:.12em;padding:2px 8px;border-radius:100px;
+  border:1px solid;margin-bottom:6px;
+}
+.sc-why{font-size:.74rem;color:var(--dim);line-height:1.5;font-style:italic}
+.sc-play{
+  position:absolute;top:12px;right:12px;z-index:2;
+  font-size:.8rem;opacity:0;transform:scale(.8);
+  transition:var(--tr);color:var(--cyan);
+  background:rgba(0,240,255,.12);
+  border-radius:50%;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+}
+.sc-match{
+  font-family:var(--font-m);font-size:.6rem;
+  color:var(--green);letter-spacing:.08em;
+}
+
+/* ===== TIMELINE ===== */
+.tl{position:relative;padding-left:28px}
+.tl::before{
+  content:'';position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(to bottom,var(--cyan),var(--purple),transparent);
+}
+.tl-event{
+  position:relative;margin-bottom:28px;
+  opacity:0;transform:translateX(16px);
+  animation:slideIn .5s ease forwards;
+}
+.tl-event:last-child{margin-bottom:0}
+.tl-dot{
+  position:absolute;left:-24px;top:5px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--cyan);
+  box-shadow:var(--gcyan);
+}
+.tl-age{
+  font-family:var(--font-d);font-size:.65rem;
+  letter-spacing:.18em;margin-bottom:5px;
+  color:var(--cyan);
+}
+.tl-ttl{font-size:.98rem;font-weight:700;margin-bottom:3px}
+.tl-desc{font-size:.82rem;color:var(--dim);line-height:1.65}
+
+/* ===== VIBE CARD ===== */
+.vibe-card{margin-bottom:18px}
+.vibe-palette{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.swatch{
+  flex:1;min-width:48px;height:40px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.55rem;font-family:var(--font-m);
+  letter-spacing:.06em;font-weight:bold;color:rgba(0,0,0,.7);
+  transition:transform .2s;cursor:default;
+}
+.swatch:hover{transform:scaleY(1.1)}
+.vibe-quote{
+  font-size:1.05rem;font-style:italic;line-height:1.7;
+  color:var(--txt);border-left:3px solid var(--cyan);
+  padding-left:16px;margin-bottom:14px;
+}
+.share-row{display:flex;gap:10px;flex-wrap:wrap}
+.share-btn{
+  flex:1;padding:10px 18px;border-radius:100px;
+  font-family:var(--font-d);font-size:.7rem;letter-spacing:.1em;
+  cursor:pointer;transition:var(--tr);border:1px solid;
+  min-width:120px;
+}
+.share-btn.primary{
+  background:linear-gradient(130deg,var(--cyan),var(--purple));
+  color:#050810;border-color:transparent;
+  box-shadow:0 0 20px rgba(0,240,255,.25);
+}
+.share-btn.primary:hover{box-shadow:0 0 35px rgba(0,240,255,.5);transform:translateY(-1px)}
+.share-btn.sec{
+  background:transparent;color:var(--cyan);
+  border-color:rgba(0,240,255,.3);
+}
+.share-btn.sec:hover{background:rgba(0,240,255,.08)}
+.copy-toast{
+  display:none;font-family:var(--font-m);font-size:.7rem;
+  color:var(--green);letter-spacing:.08em;
+  align-items:center;gap:6px;padding:8px 16px;
+  border:1px solid rgba(61,255,160,.25);border-radius:100px;
+  background:rgba(61,255,160,.06);
+}
+.copy-toast.show{display:flex;animation:fadeDown .4s ease}
+
+/* ===== FOOTER ===== */
+footer{
+  position:relative;z-index:1;text-align:center;
+  padding:20px;color:var(--dim);
+  font-size:.7rem;font-family:var(--font-m);letter-spacing:.06em;
+  border-top:1px solid rgba(255,255,255,.055);
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp  {from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn {to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:.9;transform:translateX(-50%) scale(1.07)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes popIn{0%{transform:scale(.7);opacity:0}80%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:480px){
+  .card{padding:20px 16px}
+  .h1 .s2{font-size:2.6rem}
+  .gen-btn{padding:13px 32px;font-size:.78rem}
+  #results .badge{font-size:.52rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<button id="sndBtn" title="Toggle Ambient Sound">♪</button>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb b"></div>
+  <div class="tag">FUTURE ARCHITECT · v2099</div>
+  <h1 class="h1">
+    <span class="s1">Design Your</span>
+    <span class="s2">Future Self</span>
+  </h1>
+  <p class="subtitle">Calibrate 4 life dimensions. Unlock your archetype. Discover the soundtrack of your destiny.</p>
+</header>
+
+<!-- APP -->
+<main class="wrap">
+
+  <!-- SLIDERS -->
+  <section class="card sliders-panel">
+    <div class="panel-title">⚙️ Configure Your Parameters</div>
+    <p class="panel-sub">Drag each dial to shape your future self's core attributes.</p>
+    <div class="sliders-grid">
+
+      <div class="si" data-t="intelligence">
+        <div class="sh">
+          <span class="si-icon">🧠</span>
+          <span class="si-name">Intelligence</span>
+          <span class="si-val" id="v-intelligence">50</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" id="s-intelligence">
+        <div class="si-labels"><span>Novice</span><span>Genius</span></div>
+      </div>
+
+      <div class="si" data-t="fitness">
+        <div class="sh">
+          <span class="si-icon">💪</span>
+          <span class="si-name">Fitness</span>
+          <span class="si-val" id="v-fitness">50</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" id="s-fitness">
+        <div class="si-labels"><span>Couch Potato</span><span>Olympian</span></div>
+      </div>
+
+      <div class="si" data-t="wealth">
+        <div class="sh">
+          <span class="si-icon">💎</span>
+          <span class="si-name">Wealth</span>
+          <span class="si-val" id="v-wealth">50</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" id="s-wealth">
+        <div class="si-labels"><span>Broke</span><span>Billionaire</span></div>
+      </div>
+
+      <div class="si" data-t="social">
+        <div class="sh">
+          <span class="si-icon">🌐</span>
+          <span class="si-name">Social Life</span>
+          <span class="si-val" id="v-social">50</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" id="s-social">
+        <div class="si-labels"><span>Lone Wolf</span><span>Socialite</span></div>
+      </div>
+
+    </div>
+    <div class="btn-wrap">
+      <button class="gen-btn" id="genBtn">
+        <span>⚡ Generate My Future</span>
+        <span class="shine"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results">
+
+    <!-- ROW 1: Avatar + Story -->
+    <div class="top-grid">
+      <div class="card av-card">
+        <span class="badge">FUTURE SELF</span>
+        <div class="av-emoji" id="avEmoji"></div>
+        <div class="av-name" id="avName"></div>
+        <div class="av-arch" id="avArch"></div>
+        <div class="av-personality" id="avPersonality"></div>
+        <div class="power-box">
+          <span class="pw-label">POWER LEVEL</span>
+          <div class="pw-val" id="pwVal">0</div>
+          <div class="pw-bar-bg"><div class="pw-bar" id="pwBar"></div></div>
+        </div>
+      </div>
+
+      <div class="card story-card">
+        <span class="badge">LIFE NARRATIVE</span>
+        <div class="story-body" id="storyBody"></div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Radar + Stats -->
+    <div class="mid-grid">
+      <div class="card radar-wrap">
+        <span class="badge">ATTRIBUTE RADAR</span>
+        <canvas id="radarCanvas" width="220" height="220"></canvas>
+        <div class="radar-labels" id="radarLabels"></div>
+      </div>
+
+      <div class="card">
+        <span class="badge">ATTRIBUTE MATRIX</span>
+        <div class="stats-list" id="statsList"></div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Song Suggestions -->
+    <div class="card songs-section">
+      <div class="songs-header">
+        <span class="badge" style="margin-bottom:0">🎵 YOUR FUTURE SOUNDTRACK</span>
+        <span class="vibe-pill" id="vibePill"></span>
+      </div>
+      <div class="songs-grid" id="songsGrid"></div>
+    </div>
+
+    <!-- ROW 4: Timeline -->
+    <div class="card" style="margin-bottom:18px">
+      <span class="badge">FUTURE TIMELINE</span>
+      <div class="tl" id="tlWrap"></div>
+    </div>
+
+    <!-- ROW 5: Vibe Card -->
+    <div class="card vibe-card">
+      <span class="badge">YOUR FUTURE AESTHETIC</span>
+      <div class="vibe-palette" id="vibePalette"></div>
+      <div class="vibe-quote" id="vibeQuote"></div>
+      <div class="share-row">
+        <button class="share-btn primary" id="copyBtn">📋 Copy My Future Profile</button>
+        <button class="share-btn sec" id="regenBtn">🔄 Reshuffle Story</button>
+        <div class="copy-toast" id="copyToast">✓ Copied to clipboard!</div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>© 2099 · Future Self Labs · All timelines reserved · Built for Hackathon</footer>
+
+<script>
+/* =====================================================
+   PARTICLE BACKGROUND
+===================================================== */
+(function(){
+  const c=document.getElementById('bgCanvas'),x=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+  class P{
+    constructor(){this.reset(true)}
+    reset(r){
+      this.x=Math.random()*W;
+      this.y=r?Math.random()*H:H+6;
+      this.r=Math.random()*1.1+.3;
+      this.vx=(Math.random()-.5)*.22;
+      this.vy=-(Math.random()*.45+.12);
+      this.life=0;this.max=Math.random()*280+120;
+      this.hue=Math.random()<.55?188:268;
+    }
+    tick(){this.x+=this.vx;this.y+=this.vy;this.life++;if(this.life>=this.max||this.y<-8)this.reset(false)}
+    draw(){
+      const a=Math.sin(Math.PI*this.life/this.max)*.65;
+      x.beginPath();x.arc(this.x,this.y,this.r,0,Math.PI*2);
+      x.fillStyle=`hsla(${this.hue},100%,70%,${a})`;x.fill();
+    }
+  }
+  for(let i=0;i<130;i++)pts.push(new P());
+  function loop(){x.clearRect(0,0,W,H);pts.forEach(p=>{p.tick();p.draw()});requestAnimationFrame(loop)}
+  loop();
+})();
+
+/* =====================================================
+   WEB AUDIO AMBIENT
+===================================================== */
+let actx=null,mgain=null,sndOn=false;
+const sndBtn=document.getElementById('sndBtn');
+function buildAudio(){
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  mgain=actx.createGain();mgain.gain.value=0;mgain.connect(actx.destination);
+  [[55,.055,'sine'],[82.4,.03,'triangle'],[110,.025,'sine'],[164.8,.018,'triangle']].forEach(([f,g,t])=>{
+    const o=actx.createOscillator(),gn=actx.createGain();
+    o.type=t;o.frequency.value=f;gn.gain.value=g;
+    o.connect(gn);gn.connect(mgain);o.start();
+  });
+  const lfo=actx.createOscillator(),lg=actx.createGain();
+  lfo.frequency.value=.07;lg.gain.value=.015;
+  lfo.connect(lg);lg.connect(mgain.gain);lfo.start();
+}
+sndBtn.addEventListener('click',()=>{
+  if(!actx)buildAudio();
+  sndOn=!sndOn;
+  mgain.gain.linearRampToValueAtTime(sndOn?.42:0,actx.currentTime+1.2);
+  sndBtn.textContent=sndOn?'♬':'♪';
+  sndBtn.classList.toggle('on',sndOn);
+});
+
+/* =====================================================
+   SLIDERS
+===================================================== */
+const traits=['intelligence','fitness','wealth','social'];
+const vals={};
+traits.forEach(t=>{
+  const el=document.getElementById('s-'+t);
+  const vl=document.getElementById('v-'+t);
+  const si=el.closest('.si');
+  vals[t]=+el.value;
+  el.addEventListener('input',()=>{
+    vals[t]=+el.value;
+    vl.textContent=el.value;
+    vl.style.color=el.value>=70?'#3dffa0':el.value>=38?'#00f0ff':'#ff5f8f';
+    si.classList.toggle('glow',el.value>60);
+    updateBg();
+  });
+});
+function avg(){return(vals.intelligence+vals.fitness+vals.wealth+vals.social)/4}
+function updateBg(){
+  const a=avg();
+  const h=195+a*.5;
+  document.body.style.background=
+    `radial-gradient(ellipse at 25% 15%,hsl(${h},55%,5%) 0%,#05080f 55%)`;
+}
+updateBg();
+
+/* =====================================================
+   DATA
+===================================================== */
+const AVATARS=[
+  {min:0, e:'😴',n:'The Drifter',     arch:'LEVEL 1 · EXISTENCE'},
+  {min:22,e:'🌱',n:'The Late Bloomer',arch:'LEVEL 2 · AWAKENING'},
+  {min:38,e:'🔥',n:'The Grinder',     arch:'LEVEL 3 · HUSTLE'},
+  {min:52,e:'🚀',n:'The Achiever',    arch:'LEVEL 4 · ASCENT'},
+  {min:67,e:'⚡',n:'The Visionary',   arch:'LEVEL 5 · CATALYST'},
+  {min:82,e:'🌟',n:'The Legend',      arch:'LEVEL 6 · ICON'},
+];
+
+const PERSONALITIES=[
+  // [i-threshold, f-threshold, w-threshold, s-threshold, label]
+  [70,70,70,70,'The Renaissance Human'],
+  [80,30,70,50,'The Strategic Operator'],
+  [80,60,40,40,'The Lone Genius'],
+  [40,80,40,70,'The Social Athlete'],
+  [50,50,80,60,'The Charismatic Mogul'],
+  [70,50,50,70,'The Networked Intellectual'],
+  [40,80,60,40,'The Disciplined Builder'],
+  [60,40,75,65,'The Influential Entrepreneur'],
+  [50,50,50,50,'The Balanced Wanderer'],
+];
+
+function getPersonality(i,f,w,s){
+  let best=null,bestScore=-1;
+  PERSONALITIES.forEach(p=>{
+    const match=((i>=p[0]?1:0)+(f>=p[1]?1:0)+(w>=p[2]?1:0)+(s>=p[3]?1:0));
+    if(match>bestScore){bestScore=match;best=p}
+  });
+  return best?best[4]:'The Unique Enigma';
+}
+
+const STORIES={
+  intelligence:{
+    low:'You navigate life through gut and grit — street-smart and adaptable, no textbook required.',
+    mid:'Intellectually restless, you consume knowledge like oxygen. Books, docs, and deep dives fuel you.',
+    high:'Your mind is a compounding machine. You see patterns decades ahead. Conversations with you shift worldviews.',
+  },
+  fitness:{
+    low:'The gym is aspirational for you — comfort wins most days, and that\'s a chapter, not the whole book.',
+    mid:'You\'ve found the rhythm of movement. A few sessions a week keep you sharp, focused, and energized.',
+    high:'Your body is infrastructure. The 5 AM alarm doesn\'t hurt anymore — it\'s ritual. Discipline is your identity.',
+  },
+  wealth:{
+    low:'Money is a puzzle you\'re still solving. But you find richness in experience, and that\'s currency too.',
+    mid:'Financially stable, you invest wisely and sleep soundly. Not flashy — strategically patient.',
+    high:'Your portfolio compounds quietly while you sleep. You\'ve moved from earning money to deploying power.',
+  },
+  social:{
+    low:'Solitude is your lab. You go deep with a rare few, and that quality of connection outweighs volume.',
+    mid:'You balance depth and breadth — enough connection to thrive, enough solitude to recharge and think.',
+    high:'Your network isn\'t just people — it\'s an ecosystem. Rooms shift when you enter. Influence is your native language.',
+  },
+};
+
+function storyFrag(t,v){return v<35?STORIES[t].low:v<68?STORIES[t].mid:STORIES[t].high}
+
+const INTROS=[
+  [82,'You are operating at a frequency most people never reach. The data suggests one outcome: extraordinary.'],
+  [65,'Your trajectory is deliberate and compounding. The gap between you and average grows wider every year.'],
+  [45,'You\'re the underdog with a blueprint. And historically, those are the most dangerous kind.'],
+  [0, 'Every legend started exactly where you are. The slider positions today are not permanent — they\'re a starting point.'],
+];
+
+function getIntro(a){return INTROS.find(x=>a>=x[0])[1]}
+
+/* =====================================================
+   SONGS DATABASE
+===================================================== */
+const SONGS={
+  legendary:[
+    {e:'👑',title:'POWER',artist:'Kanye West',genre:'HIP-HOP',color:'#a259ff',why:'For the version of you that bends reality.',match:97},
+    {e:'🏆',title:'Hall of Fame',artist:'The Script ft. will.i.am',genre:'POP/ROCK',color:'#ffc84a',why:'You were born to be written in history.',match:95},
+    {e:'🌆',title:'Empire State of Mind',artist:'Jay-Z & Alicia Keys',genre:'HIP-HOP',color:'#00f0ff',why:'Streets paved with your ambition.',match:93},
+    {e:'💎',title:"Don't Stop Believin'",artist:'Journey',genre:'ROCK',color:'#ff5f8f',why:'The anthem of everyone who made it.',match:90},
+  ],
+  grind:[
+    {e:'🔥',title:'Till I Collapse',artist:'Eminem ft. Nate Dogg',genre:'HIP-HOP',color:'#ff4f4f',why:'Fuel for the sessions no one sees.',match:98},
+    {e:'👊',title:'Eye of the Tiger',artist:'Survivor',genre:'ROCK',color:'#ffa94d',why:'Classics earn that title. You know why.',match:91},
+    {e:'⚡',title:'Lose Yourself',artist:'Eminem',genre:'HIP-HOP',color:'#ff5f8f',why:'One shot. One moment. Don\'t miss it.',match:96},
+    {e:'💥',title:"Can't Hold Us",artist:'Macklemore & Ryan Lewis',genre:'HIP-HOP',color:'#3dffa0',why:'The energy of someone who refuses to settle.',match:88},
+  ],
+  intellectual:[
+    {e:'🧠',title:'High Hopes',artist:'Panic! at the Disco',genre:'POP/ROCK',color:'#a259ff',why:'For dreamers who actually ship.',match:94},
+    {e:'⏳',title:'Vienna',artist:'Billy Joel',genre:'CLASSIC ROCK',color:'#ffc84a',why:'The wisest version of you knows patience.',match:89},
+    {e:'🌊',title:'Clocks',artist:'Coldplay',genre:'ALTERNATIVE',color:'#00f0ff',why:'Time is your only non-renewable resource.',match:87},
+    {e:'🔮',title:'Radioactive',artist:'Imagine Dragons',genre:'ALTERNATIVE',color:'#ff9a3c',why:'The sound of a mind that changed everything.',match:92},
+  ],
+  social:[
+    {e:'🥂',title:'Good Life',artist:'Kanye West ft. T-Pain',genre:'HIP-HOP',color:'#ffc84a',why:'The soundtrack of your best years.',match:95},
+    {e:'🎉',title:"Can't Stop the Feeling",artist:'Justin Timberlake',genre:'POP',color:'#3dffa0',why:'Because your energy is genuinely contagious.',match:91},
+    {e:'✨',title:'Levitating',artist:'Dua Lipa',genre:'POP/DANCE',color:'#ff5f8f',why:'The feeling of moving through life in flow.',match:88},
+    {e:'😎',title:'Happy',artist:'Pharrell Williams',genre:'POP/SOUL',color:'#ffc84a',why:'Unapologetically joyful — just like you.',match:86},
+  ],
+  wealthy:[
+    {e:'💰',title:'Started From the Bottom',artist:'Drake',genre:'HIP-HOP',color:'#ffc84a',why:'Your origin story deserves an anthem.',match:96},
+    {e:'💅',title:'Stronger',artist:'Kanye West',genre:'HIP-HOP',color:'#a259ff',why:'What doesn\'t kill you upgrades you.',match:93},
+    {e:'🏖️',title:"Livin' on a Prayer",artist:'Bon Jovi',genre:'ROCK',color:'#ff5f8f',why:'From nothing to everything — that arc is yours.',match:85},
+    {e:'🚁',title:'Mo Money Mo Problems',artist:'Notorious B.I.G.',genre:'HIP-HOP',color:'#00f0ff',why:'The luxury problem set of the arrived.',match:82},
+  ],
+  balanced:[
+    {e:'🌅',title:'Here Comes the Sun',artist:'The Beatles',genre:'CLASSIC',color:'#ffc84a',why:'Timeless peace for a timeless soul.',match:90},
+    {e:'🌍',title:'Beautiful Day',artist:'U2',genre:'ROCK',color:'#00f0ff',why:'Gratitude is your highest frequency.',match:88},
+    {e:'🦋',title:'Titanium',artist:'David Guetta ft. Sia',genre:'ELECTRONIC',color:'#a259ff',why:'Bulletproof. Resilient. You.',match:93},
+    {e:'🌟',title:'Believer',artist:'Imagine Dragons',genre:'ALTERNATIVE',color:'#ff9a3c',why:'Pain shaped you into exactly who you needed to become.',match:91},
+  ],
+  underdog:[
+    {e:'🌱',title:'The Climb',artist:'Miley Cyrus',genre:'POP',color:'#3dffa0',why:'Every legend has a chapter one.',match:94},
+    {e:'🌄',title:'Rise Up',artist:'Andra Day',genre:'SOUL',color:'#ffc84a',why:'The anthem of people who didn\'t give up.',match:96},
+    {e:'💫',title:'Eye of the Tiger',artist:'Survivor',genre:'ROCK',color:'#ff4f4f',why:'This is your training montage moment.',match:89},
+    {e:'🔑',title:'Started From the Bottom',artist:'Drake',genre:'HIP-HOP',color:'#a259ff',why:'Document the journey — it becomes the inspiration.',match:92},
+  ],
+};
+
+const VIBES={
+  legendary:{label:'LEGENDARY FREQUENCY',color:'#ffc84a',border:'rgba(255,200,74,.5)'},
+  grind:    {label:'HUSTLE ENERGY',      color:'#ff5f8f',border:'rgba(255,95,143,.5)'},
+  intellectual:{label:'DEEP MIND',       color:'#a259ff',border:'rgba(162,89,255,.5)'},
+  social:   {label:'HIGH ENERGY SOCIAL', color:'#3dffa0',border:'rgba(61,255,160,.5)'},
+  wealthy:  {label:'WEALTH FREQUENCY',   color:'#ffc84a',border:'rgba(255,200,74,.5)'},
+  balanced: {label:'BALANCED FLOW',      color:'#00f0ff',border:'rgba(0,240,255,.5)'},
+  underdog: {label:'ORIGIN STORY',       color:'#ff9a3c',border:'rgba(255,154,60,.5)'},
+};
+
+function getVibe(i,f,w,s){
+  const a=avg();
+  if(a>=80)return 'legendary';
+  const dom=Object.entries({intelligence:i,fitness:f,wealth:w,social:s})
+    .sort((a,b)=>b[1]-a[1])[0][0];
+  if(a<30)return 'underdog';
+  if(dom==='fitness')return 'grind';
+  if(dom==='intelligence')return 'intellectual';
+  if(dom==='social')return 'social';
+  if(dom==='wealth')return 'wealthy';
+  return 'balanced';
+}
+
+/* =====================================================
+   TIMELINE DATA
+===================================================== */
+function getTL(i,f,w,s){
+  const a=(i+f+w+s)/4;
+  const high=a>=60;
+  return[
+    {
+      age:'AGE 25',dot:'var(--cyan)',
+      ttl:high?'First Breakthrough':'Finding the Path',
+      desc:high
+        ?(i>=60?'Published research or launched your first funded venture. ':'')
+         +(f>=60?'Competing at a serious athletic level. ':'')
+         +(w>=60?'First significant wealth creation milestone. ':'')
+         +(s>=60?'Built a network of 200+ high-value connections.':'A growing circle of intentional relationships.')
+        :'Still assembling the toolkit. Experimenting, failing fast, and learning the rules of the game.',
+    },
+    {
+      age:'AGE 35',dot:'var(--purple)',
+      ttl:high?'The Compounding Effect':'Steady Ascent',
+      desc:high
+        ?(i>=70?'Leading teams, writing books, shaping industries. ':'')
+         +(f>=70?'Coaching others while maintaining peak physical form. ':'')
+         +(w>=70?'Seven-figure net worth and growing. ':'')
+         +(s>=70?'Your name opens doors before you arrive.':'Building something real, brick by brick.')
+        :'Homeowner, rising professional, cultivating depth in relationships. Stability is the foundation.',
+    },
+    {
+      age:'AGE 50',dot:'var(--gold)',
+      ttl:high?'Icon Status Achieved':'A Life Well Lived',
+      desc:high
+        ?(i>=75?'CEO, author, TED speaker — your ideas have reached millions. ':'')
+         +(f>=75?'Completed an Ironman. Your doctor calls you "unusually healthy." ':'')
+         +(w>=75?'Sold your company. Working by choice, not necessity. ':'')
+         +(s>=75?'Your philanthropy touches hundreds of thousands of lives.':'Deep legacy. Loved by those who matter most.')
+        :'Retirement within reach, kids launched, a life that was genuinely yours. That counts for everything.',
+    },
+  ];
+}
+
+/* =====================================================
+   AESTHETIC QUOTES
+===================================================== */
+const QUOTES=[
+  [80,'The future belongs to those who designed it while others were sleeping.'],
+  [60,'Mediocrity was never an option. The numbers confirm what you already knew.'],
+  [40,'Every master was once a beginner who refused to stop. Your story isn\'t over — it\'s loading.'],
+  [0, 'The most powerful thing you can do is decide, sincerely, to begin. Today counts.'],
+];
+function getQuote(a){return QUOTES.find(q=>a>=q[0])[1]}
+
+const PALETTE_COMBOS=[
+  [80,['#00f0ff','#a259ff','#ffc84a','#3dffa0','#ff5f8f']],
+  [60,['#a259ff','#00f0ff','#ff9a3c','#ffc84a','#3dffa0']],
+  [40,['#ff9a3c','#ffc84a','#a259ff','#00f0ff','#ff5f8f']],
+  [0, ['#3dffa0','#00f0ff','#a259ff','#ff9a3c','#ffc84a']],
+];
+function getPalette(a){return PALETTE_COMBOS.find(p=>a>=p[0])[1]}
+
+/* =====================================================
+   RADAR CHART
+===================================================== */
+function drawRadar(i,f,w,s){
+  const canvas=document.getElementById('radarCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const cx=W/2,cy=H/2,R=Math.min(W,H)/2-24;
+  const data=[i,f,w,s];
+  const labels=['🧠','💪','💎','🌐'];
+  const colors=['#00f0ff','#3dffa0','#ffc84a','#a259ff'];
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid rings
+  [.25,.5,.75,1].forEach(t=>{
+    ctx.beginPath();
+    for(let k=0;k<4;k++){
+      const a=k*Math.PI/2-Math.PI/2;
+      const x=cx+Math.cos(a)*R*t,y=cy+Math.sin(a)*R*t;
+      k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=`rgba(255,255,255,${t===1?.12:.06})`;
+    ctx.lineWidth=1;ctx.stroke();
+  });
+
+  // Axis lines
+  for(let k=0;k<4;k++){
+    const a=k*Math.PI/2-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
+    ctx.strokeStyle='rgba(255,255,255,.08)';
+    ctx.stroke();
+  }
+
+  // Animate fill
+  let prog=0;
+  function frame(){
+    prog=Math.min(prog+.045,1);
+    const ease=1-Math.pow(1-prog,3);
+
+    ctx.clearRect(0,0,W,H);
+
+    // Redraw grid
+    [.25,.5,.75,1].forEach(t=>{
+      ctx.beginPath();
+      for(let k=0;k<4;k++){
+        const a=k*Math.PI/2-Math.PI/2;
+        const x=cx+Math.cos(a)*R*t,y=cy+Math.sin(a)*R*t;
+        k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle=`rgba(255,255,255,${t===1?.12:.06})`;
+      ctx.lineWidth=1;ctx.stroke();
+    });
+    for(let k=0;k<4;k++){
+      const a=k*Math.PI/2-Math.PI/2;
+      ctx.beginPath();ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
+      ctx.strokeStyle='rgba(255,255,255,.08)';ctx.stroke();
+    }
+
+    // Data polygon
+    ctx.beginPath();
+    data.forEach((v,k)=>{
+      const a=k*Math.PI/2-Math.PI/2;
+      const r=R*(v/100)*ease;
+      const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+      k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    grad.addColorStop(0,'rgba(0,240,255,.35)');
+    grad.addColorStop(.5,'rgba(162,89,255,.25)');
+    grad.addColorStop(1,'rgba(255,200,74,.1)');
+    ctx.fillStyle=grad;ctx.fill();
+    ctx.strokeStyle='rgba(0,240,255,.7)';ctx.lineWidth=2;ctx.stroke();
+
+    // Dots + labels
+    data.forEach((v,k)=>{
+      const a=k*Math.PI/2-Math.PI/2;
+      const r=R*(v/100)*ease;
+      const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+      ctx.fillStyle=colors[k];
+      ctx.shadowColor=colors[k];ctx.shadowBlur=8;
+      ctx.fill();ctx.shadowBlur=0;
+
+      // Axis label
+      const lx=cx+Math.cos(a)*(R+16),ly=cy+Math.sin(a)*(R+16);
+      ctx.font='14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(labels[k],lx,ly);
+    });
+
+    if(prog<1)requestAnimationFrame(frame);
+  }
+  frame();
+
+  // Radar legend
+  const rl=document.getElementById('radarLabels');rl.innerHTML='';
+  [['🧠 INT','#00f0ff'],['💪 FIT','#3dffa0'],['💎 WLT','#ffc84a'],['🌐 SOC','#a259ff']].forEach(([t,c])=>{
+    const span=document.createElement('span');
+    span.className='rl';span.textContent=t;
+    span.style.cssText=`border-color:${c}40;color:${c};background:${c}10`;
+    rl.appendChild(span);
+  });
+}
+
+/* =====================================================
+   TYPEWRITER
+===================================================== */
+function typeWrite(el,html,cb){
+  const text=html;
+  el.innerHTML='';
+  let i=0,inTag=false,tag='';
+  function tick(){
+    if(i>=text.length){el.innerHTML=html;if(cb)cb();return}
+    const ch=text[i];
+    if(ch==='<'){inTag=true;tag='<'}
+    if(inTag){tag+=i>0&&ch!='<'?ch:'';if(ch==='>'){inTag=false;el.innerHTML+=tag;tag='';i++;setTimeout(tick,0);return}}
+    else{el.innerHTML+=ch}
+    i++;
+    setTimeout(tick,i%3===0?18:8);
+  }
+  tick();
+}
+
+/* =====================================================
+   STATS BARS
+===================================================== */
+function buildStats(i,f,w,s){
+  const a=avg();
+  const list=document.getElementById('statsList');list.innerHTML='';
+  const rows=[
+    {l:'🧠 INTELLIGENCE',v:i,c:'#00f0ff'},
+    {l:'💪 FITNESS',v:f,c:'#3dffa0'},
+    {l:'💎 WEALTH',v:w,c:'#ffc84a'},
+    {l:'🌐 SOCIAL',v:s,c:'#a259ff'},
+    {l:'⚡ POWER INDEX',v:Math.round(a),c:'linear-gradient(90deg,#00f0ff,#a259ff,#ffc84a)'},
+    {l:'🎯 POTENTIAL',v:Math.min(100,Math.round(a*1.15)),c:'#ff5f8f'},
+  ];
+  rows.forEach(r=>{
+    const d=document.createElement('div');d.className='stat-row';
+    d.innerHTML=`
+      <div class="stat-top">
+        <span class="stat-lbl">${r.l}</span>
+        <span class="stat-num">${r.v}</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fg" data-v="${r.v}" style="background:${r.c};box-shadow:0 0 8px ${r.c.startsWith('l')?'rgba(0,240,255,.4)':r.c+'80'}"></div>
+      </div>`;
+    list.appendChild(d);
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fg').forEach(b=>{b.style.width=b.dataset.v+'%'});
+  },80);
+}
+
+/* =====================================================
+   SONGS
+===================================================== */
+function buildSongs(vibe){
+  const pool=SONGS[vibe]||SONGS.balanced;
+  const grid=document.getElementById('songsGrid');grid.innerHTML='';
+  const v=VIBES[vibe]||VIBES.balanced;
+
+  // Vibe pill
+  const pill=document.getElementById('vibePill');
+  pill.textContent=v.label;
+  pill.style.cssText=`color:${v.color};border-color:${v.border};background:${v.color}12`;
+
+  pool.slice(0,4).forEach((song,idx)=>{
+    const q=`https://open.spotify.com/search/${encodeURIComponent(song.title+' '+song.artist)}`;
+    const a=document.createElement('a');
+    a.className='song-card';a.href=q;a.target='_blank';a.rel='noopener';
+    a.style.setProperty('--accent',song.color+'22');
+    a.style.animationDelay=`${idx*.12}s`;
+    a.style.animation='popIn .5s ease both';
+    a.innerHTML=`
+      <div class="sc-art" style="background:${song.color}22;border:1px solid ${song.color}44">
+        ${song.e}
+      </div>
+      <div class="sc-info">
+        <div class="sc-title">${song.title}</div>
+        <div class="sc-artist">${song.artist}</div>
+        <span class="sc-genre" style="color:${song.color};border-color:${song.color}44;background:${song.color}11">${song.genre}</span><br>
+        <div class="sc-why">"${song.why}"</div>
+        <div class="sc-match" style="margin-top:6px">🎯 ${song.match}% vibe match</div>
+      </div>
+      <div class="sc-play">▶</div>`;
+    grid.appendChild(a);
+  });
+}
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+function buildTL(i,f,w,s){
+  const wrap=document.getElementById('tlWrap');wrap.innerHTML='';
+  const dots=['var(--cyan)','var(--purple)','var(--gold)'];
+  getTL(i,f,w,s).forEach((e,idx)=>{
+    const d=document.createElement('div');d.className='tl-event';
+    d.style.animationDelay=`${idx*.2}s`;
+    d.innerHTML=`
+      <div class="tl-dot" style="border-color:${dots[idx]};box-shadow:0 0 10px ${dots[idx]}"></div>
+      <div class="tl-age" style="color:${dots[idx]}">${e.age}</div>
+      <div class="tl-ttl">${e.ttl}</div>
+      <div class="tl-desc">${e.desc||'A chapter still being written.'}</div>`;
+    wrap.appendChild(d);
+  });
+}
+
+/* =====================================================
+   VIBE AESTHETIC CARD
+===================================================== */
+function buildVibeCard(a){
+  const palette=getPalette(a);
+  const pWrap=document.getElementById('vibePalette');pWrap.innerHTML='';
+  palette.forEach(c=>{
+    const sw=document.createElement('div');sw.className='swatch';
+    sw.style.background=c;sw.title=c;
+    sw.textContent=c.toUpperCase();
+    pWrap.appendChild(sw);
+  });
+  document.getElementById('vibeQuote').textContent=getQuote(a);
+}
+
+/* =====================================================
+   CONFETTI
+===================================================== */
+function confetti(){
+  const cv=document.getElementById('bgCanvas'),ctx=cv.getContext('2d');
+  const pieces=[];
+  const cols=['#00f0ff','#a259ff','#ffc84a','#ff5f8f','#3dffa0'];
+  for(let i=0;i<70;i++)pieces.push({
+    x:Math.random()*cv.width,y:Math.random()*cv.height*.35,
+    vx:(Math.random()-.5)*4.5,vy:Math.random()*3+1,
+    r:Math.random()*5+2,life:0,max:95,
+    c:cols[Math.floor(Math.random()*cols.length)]
+  });
+  let f=0;
+  function draw(){
+    pieces.forEach(p=>{
+      ctx.save();ctx.globalAlpha=(1-p.life/p.max)*.8;
+      ctx.fillStyle=p.c;ctx.beginPath();
+      ctx.rect(p.x,p.y,p.r,p.r*2.5);ctx.fill();ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.vy+=.07;p.life++;
+    });
+    if(++f<95)requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* =====================================================
+   POWER COUNTER ANIMATION
+===================================================== */
+function animateCounter(el,target,duration){
+  let start=null,from=0;
+  function step(ts){
+    if(!start)start=ts;
+    const prog=Math.min((ts-start)/duration,1);
+    const ease=1-Math.pow(1-prog,3);
+    el.textContent=Math.round(from+(target-from)*ease);
+    if(prog<1)requestAnimationFrame(step);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
+
+/* =====================================================
+   GENERATE
+===================================================== */
+let storyVariants=[];
+let currentVariant=0;
+
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('regenBtn').addEventListener('click',()=>{
+  if(!storyVariants.length) return;
+  const el=document.getElementById('storyBody');
+  // transition MUST be set before changing opacity so the fade-out fires
+  el.style.transition='opacity .28s ease';
+  el.style.opacity='0';
+  setTimeout(()=>{
+    currentVariant=(currentVariant+1)%storyVariants.length;
+    el.innerHTML=storyVariants[currentVariant];
+    el.style.opacity='1';
+  },290);
+});
+
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  if(!storyVariants.length) return;
+  const i=vals.intelligence,f=vals.fitness,w=vals.wealth,s=vals.social;
+  const a=avg();
+  const av=[...AVATARS].reverse().find(x=>a>=x.min)||AVATARS[0];
+  const text=`🌟 MY FUTURE SELF PROFILE\n\nArchetype: ${av.n} (${av.arch})\nPersonality: ${getPersonality(i,f,w,s)}\nPower Level: ${Math.round(a)}/100\n\n🧠 Intelligence: ${i}\n💪 Fitness: ${f}\n💎 Wealth: ${w}\n🌐 Social: ${s}\n\n${getQuote(a)}\n\nDesign yours → future-self.app`;
+
+  function showToast(){
+    const t=document.getElementById('copyToast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2800);
+  }
+
+  // Try modern clipboard API first; fall back to execCommand for file:// origins
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showToast).catch(()=>{
+      legacyCopy(text);showToast();
+    });
+  } else {
+    legacyCopy(text);showToast();
+  }
+});
+
+function legacyCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text;
+  ta.style.cssText='position:fixed;top:-999px;left:-999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus();ta.select();
+  try{document.execCommand('copy')}catch(e){}
+  document.body.removeChild(ta);
+}
+
+function generate(){
+  const i=vals.intelligence,f=vals.fitness,w=vals.wealth,s=vals.social;
+  const a=(i+f+w+s)/4;
+
+  // Avatar
+  const av=[...AVATARS].reverse().find(x=>a>=x.min)||AVATARS[0];
+  document.getElementById('avEmoji').textContent=av.e;
+  document.getElementById('avName').textContent=av.n;
+  document.getElementById('avArch').textContent=av.arch;
+  document.getElementById('avPersonality').textContent=getPersonality(i,f,w,s);
+
+  // Power level
+  animateCounter(document.getElementById('pwVal'),Math.round(a),1200);
+  setTimeout(()=>{document.getElementById('pwBar').style.width=a+'%'},80);
+
+  // Story variants
+  const base=`<span class="hl">${getIntro(a)}</span><br><br>${storyFrag('intelligence',i)} ${storyFrag('fitness',f)}<br><br>${storyFrag('wealth',w)} ${storyFrag('social',s)}`;
+  const alt1=`<span class="hl">The numbers don't lie — your configuration is ${a>=70?'rare':'still forming'}.</span><br><br>${storyFrag('fitness',f)} ${storyFrag('intelligence',i)}<br><br>${storyFrag('social',s)} ${storyFrag('wealth',w)}`;
+  const alt2=`<span class="hl">${a>=60?'When they study what success looks like, your profile will be a case study.':'The gap between where you are and where you could be is just a series of decisions.'}</span><br><br>${storyFrag('wealth',w)} ${storyFrag('social',s)}<br><br>${storyFrag('intelligence',i)} ${storyFrag('fitness',f)}`;
+  storyVariants=[base,alt1,alt2];currentVariant=0;
+
+  // Typewriter story
+  typeWrite(document.getElementById('storyBody'),base);
+
+  // Radar
+  drawRadar(i,f,w,s);
+
+  // Stats
+  buildStats(i,f,w,s);
+
+  // Songs
+  const vibe=getVibe(i,f,w,s);
+  buildSongs(vibe);
+
+  // Timeline
+  buildTL(i,f,w,s);
+
+  // Vibe card
+  buildVibeCard(a);
+
+  // Show results
+  const res=document.getElementById('results');
+  res.style.display='block';
+  confetti();
+  setTimeout(()=>res.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+</script>
+</body>
+</html>
