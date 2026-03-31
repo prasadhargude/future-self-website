@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Design Your Future Self</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Ambient sound toggle -->
+  <button id="soundToggle" class="sound-btn" title="Toggle Ambient Sound">
+    <span id="soundIcon">♪</span>
+  </button>
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="tag-line">FUTURE ARCHITECT v2099</div>
+      <h1 class="main-title">
+        <span class="title-design">Design Your</span><br>
+        <span class="title-future">Future Self</span>
+      </h1>
+      <p class="subtitle">Calibrate your life vector. Simulate your destiny. Become who you're meant to be.</p>
+    </div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb hero-orb--2"></div>
+  </header>
+
+  <!-- Main App -->
+  <main class="app-container">
+
+    <!-- Sliders Panel -->
+    <section class="sliders-panel glass-card">
+      <h2 class="panel-title">⚙️ Configure Your Parameters</h2>
+      <p class="panel-desc">Drag each dial to calibrate your future self's core attributes.</p>
+
+      <div class="slider-group" id="sliderGroup">
+
+        <div class="slider-item" data-trait="intelligence">
+          <div class="slider-header">
+            <span class="trait-icon">🧠</span>
+            <span class="trait-name">Intelligence</span>
+            <span class="trait-value" id="val-intelligence">50</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input type="range" min="0" max="100" value="50" class="futuristic-slider" id="slider-intelligence" />
+            <div class="slider-fill" id="fill-intelligence"></div>
+          </div>
+          <div class="trait-labels"><span>Novice</span><span>Genius</span></div>
+        </div>
+
+        <div class="slider-item" data-trait="fitness">
+          <div class="slider-header">
+            <span class="trait-icon">💪</span>
+            <span class="trait-name">Fitness</span>
+            <span class="trait-value" id="val-fitness">50</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input type="range" min="0" max="100" value="50" class="futuristic-slider" id="slider-fitness" />
+            <div class="slider-fill" id="fill-fitness"></div>
+          </div>
+          <div class="trait-labels"><span>Couch Potato</span><span>Olympic</span></div>
+        </div>
+
+        <div class="slider-item" data-trait="wealth">
+          <div class="slider-header">
+            <span class="trait-icon">💎</span>
+            <span class="trait-name">Wealth</span>
+            <span class="trait-value" id="val-wealth">50</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input type="range" min="0" max="100" value="50" class="futuristic-slider" id="slider-wealth" />
+            <div class="slider-fill" id="fill-wealth"></div>
+          </div>
+          <div class="trait-labels"><span>Broke</span><span>Billionaire</span></div>
+        </div>
+
+        <div class="slider-item" data-trait="social">
+          <div class="slider-header">
+            <span class="trait-icon">🌐</span>
+            <span class="trait-name">Social Life</span>
+            <span class="trait-value" id="val-social">50</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input type="range" min="0" max="100" value="50" class="futuristic-slider" id="slider-social" />
+            <div class="slider-fill" id="fill-social"></div>
+          </div>
+          <div class="trait-labels"><span>Hermit</span><span>Socialite</span></div>
+        </div>
+
+      </div>
+
+      <!-- Preset Profiles -->
+      <div class="preset-row">
+        <span class="preset-label">Quick presets:</span>
+        <button class="preset-btn" data-preset="balanced">Balanced</button>
+        <button class="preset-btn" data-preset="grinder">Grinder</button>
+        <button class="preset-btn" data-preset="socialLegend">Social Legend</button>
+        <button class="preset-btn" data-preset="monkMode">Monk Mode</button>
+      </div>
+
+      <!-- Generate Button -->
+      <div class="btn-wrap">
+        <button id="generateBtn" class="generate-btn">
+          <span class="btn-text">⚡ Generate My Future</span>
+          <span class="btn-glow"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results" style="display:none;">
+
+      <!-- Avatar Card -->
+      <div class="result-grid">
+
+        <div class="result-card avatar-card glass-card">
+          <div class="card-badge">YOUR FUTURE SELF</div>
+          <div class="avatar-display" id="avatarDisplay"></div>
+          <div class="avatar-title" id="avatarTitle"></div>
+          <div class="avatar-archetype" id="avatarArchetype"></div>
+          <div class="power-level-wrap">
+            <span class="power-label">POWER LEVEL</span>
+            <span class="power-value" id="powerLevel"></span>
+          </div>
+        </div>
+
+        <!-- Story Card -->
+        <div class="result-card story-card glass-card">
+          <div class="card-badge">LIFE NARRATIVE</div>
+          <div class="story-text" id="storyText"></div>
+        </div>
+
+      </div>
+
+      <!-- Stats Bar Cards -->
+      <div class="stats-card glass-card">
+        <div class="card-badge">ATTRIBUTE MATRIX</div>
+        <div class="stats-grid" id="statsGrid"></div>
+      </div>
+
+      <!-- Timeline Card -->
+      <div class="timeline-card glass-card">
+        <div class="card-badge">FUTURE TIMELINE</div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2099 · Future Self Labs · All timelines reserved</p>
+  </footer>
+
+  <!-- Ambient audio file (replace src with your own path) -->
+  <audio id="ambientAudio" src="ambient.mp3" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
